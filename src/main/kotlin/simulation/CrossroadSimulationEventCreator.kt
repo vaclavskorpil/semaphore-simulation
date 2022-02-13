@@ -5,8 +5,8 @@ import generators.CarLeavesCrossRoadGenerator
 import simulation.CrossroadSimulationEvent
 
 /**
- * Generates crossroad simulation events. Would youse generators for every simulation event.
- * Would always check all times of next events and chose the closest one. Then use that generator to generate new event
+ * Generates crossroad simulation events. Would use generators for every simulation event.
+ * Checks all times of generator.nextEventAt() and chose the closest one. Then use that generator to generate new event.
  * */
 class CrossroadSimulationEventCreator : SimulationEventGenerator<CrossroadSimulationState, CrossroadSimulationEvent> {
 

@@ -15,6 +15,14 @@ import simulation.CrossroadSimulationEvent.CarStartLeavingCrossroad
 import simulation.CrossroadSimulationEvent.SemaphoreChange
 import simulation.CrossroadSimulationEvent.SimulationEnd
 
+/**
+ * Crossroad simulation, state machine that creates new stated based on incoming events from [eventGenerator] until SimulationEvent [SimulationEnd] is received.
+ * Simulation state is exposed trough StateFlow fol clients to observe.
+ *
+ *  @param simulationEnd time when simulation should end
+ *  @param eventCreator creator that generates events for simulation
+ *  @param initialState initial simulation state
+ * */
 class CrossroadSimulation(
     override val simulationEnd: Int,
     private val eventCreator: CrossroadSimulationEventCreator,
@@ -26,13 +34,17 @@ class CrossroadSimulation(
     private val _simulationState = MutableStateFlow(initialState)
     override val simulationState: StateFlow<CrossroadSimulationState> = _simulationState
 
+    /**
+     * Starts simulation.
+     * collects simulation states that create new events which maps to new states until [SimulationEnd] event is received.
+     * */
     override fun startSimulation() {
         scope.launch {
             simulationState.collect { currentState ->
                 val event = eventCreator.nextEvent(currentState)
                 val newState = mapEventToState(event, currentState)
-                if (event is SimulationEnd) cancel()
                 _simulationState.emit(newState)
+                if (event is SimulationEnd) cancel()
             }
         }
     }
@@ -55,7 +67,7 @@ class CrossroadSimulation(
     }
 
     /**
-     * Creates new state based on from CarArriveOnSemaphore event
+     * Creates new state based on from CarArriveOnSemaphore event. Changes the time of simulation and adds new car to the queue.
      * */
     private fun handleCarrArrivedOnSemaphore(
         event: CarArriveOnSemaphore,
@@ -65,7 +77,7 @@ class CrossroadSimulation(
     }
 
     /**
-     * Creates new state based on from CarStartLeavingCrossroad event
+     * Creates new state based on from CarStartLeavingCrossroad event. Changes the time of simulation and moves car from waiting queue to laving cars queue.
      * */
     private fun handleCarLeavesCrossRoad(
         event: CarStartLeavingCrossroad,

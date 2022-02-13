@@ -2,7 +2,7 @@ package data
 
 import java.util.*
 
-class Crossroad(
+class CrossroadState(
     /**
      * Directions where the semaphore lights are red
      * */

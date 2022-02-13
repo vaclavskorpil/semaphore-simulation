@@ -5,7 +5,7 @@ import data.CrossroadSimulationState
 import simulation.CrossroadSimulationEvent
 
 /**
- * Generatos CarLeavesCrossRoad events based on current state
+ * Generates CarLeavesCrossRoad events based on current state
  * */
 class CarLeavesCrossRoadGenerator :
     SimulationEventGenerator<CrossroadSimulationState, CrossroadSimulationEvent.CarLeavesCrossRoad> {

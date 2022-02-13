@@ -8,5 +8,5 @@ import simulation.CrossroadSimulationEvent
 data class CrossroadSimulationState(
     override val currentTime: Int = 0,
     override val currentEvent: CrossroadSimulationEvent? = null,
-    val crossroad: Crossroad = Crossroad(),
+    val crossroad: CrossroadState = CrossroadState(),
 ) : SimulationState

@@ -5,13 +5,12 @@ import data.Car
 import data.Direction
 
 /**
- * Simulation event
+ * Declaration of all events that can occur in the crossroad simulation.
  * */
-
 sealed interface CrossroadSimulationEvent : SimulationEvent {
 
     /**
-     * Event that signalizing that semaphore light switched. Sempahores that are red are going to be green
+     * Event that signalizing that semaphore light switched. Semaphores that are red are going to be green
      * and otherwise
      * */
     class SemaphoreChange(override val eventTime: Int) : CrossroadSimulationEvent
@@ -36,7 +35,7 @@ sealed interface CrossroadSimulationEvent : SimulationEvent {
     ) : CrossroadSimulationEvent
 
     /**
-     * Event signalizing carr crossed the crossroad and left
+     * Event signalizing car crossed the crossroad and left
      * */
     data class CarLeavesCrossRoad(
         override val eventTime: Int,
