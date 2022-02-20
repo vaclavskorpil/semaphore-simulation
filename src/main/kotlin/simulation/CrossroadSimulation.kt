@@ -19,10 +19,6 @@ class CrossroadSimulation(
     private val eventCreator: CrossroadSimulationEventCreator,
 ) : Simulation<CrossroadSimulationState, CrossroadSimulationEvent> {
 
-    /**
-     * Starts simulation.
-     * collects simulation states that create new events which maps to new states until [SimulationEnd] event is received.
-     * */
     override fun startSimulation(
         initialState: CrossroadSimulationState,
         simulationEnd: Int,

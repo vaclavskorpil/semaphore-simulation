@@ -1,12 +1,16 @@
 import data.CrossroadSimulationState
+import generators.CarArriveGenerator
 import simulation.CrossroadSimulation
 
 fun main() {
     val simulation = CrossroadSimulation(
-        simulationEnd = Int.MAX_VALUE,
-        eventCreator = CrossroadSimulationEventCreator(),
-        initialState = CrossroadSimulationState(),
+        eventCreator = CrossroadSimulationEventCreator(
+            carGenerator = CarArriveGenerator(),
+            semaphoreGenerator = CarArriveGenerator(),
+            carLeavesCrossRoadGenerator = CarArriveGenerator()
+        ),
     )
-
-    simulation.startSimulation()
+    val simulationEnd = 10000
+    simulation.startSimulation(CrossroadSimulationState(), simulationEnd)
 }
+
