@@ -1,21 +1,18 @@
 package base
 
-import kotlinx.coroutines.flow.StateFlow
+import data.CrossroadSimulationState
+import data.SimulationResult
 
-interface Simulation {
-
-    /**
-     * Time when the simulation ends.
-     * */
-    val simulationEnd: Int
+interface Simulation<State : SimulationState, Event : SimulationEvent> {
 
     /**
-     * Current state of the simulation. Could be observed from the client.
+     * Creates simulation timeline. Starts with initial state that is included in the result.
+     * End when the simulation reaches [simulationEnd] time.
+     *
+     *
+     * @param initialState initial state of the simulation
+     * @param simulationEnd time when simulation ends
+     * @return result of the simulation including initial state
      * */
-    val simulationState: StateFlow<SimulationState>
-
-    /**
-     * Starts a simulation with initial state
-     * */
-    fun startSimulation()
+    fun startSimulation(initialState: CrossroadSimulationState, simulationEnd: Int): SimulationResult<State, Event>
 }

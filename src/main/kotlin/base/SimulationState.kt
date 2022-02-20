@@ -6,5 +6,4 @@ package base
 interface SimulationState {
 
     val currentTime: Int
-    val currentEvent: SimulationEvent?
 }
