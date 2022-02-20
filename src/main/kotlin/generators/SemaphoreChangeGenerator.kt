@@ -1,20 +1,23 @@
 package generators
 
-import base.SimulationEventGenerator
+import base.SimulationEventCreator
 import data.CrossroadSimulationState
 import simulation.CrossroadSimulationEvent
 
 /**
  * Generates Semaphore event in specified intervals
  * */
-class SemaphoreChangeGenerator(val simulationEnd: Int) :
-    SimulationEventGenerator<CrossroadSimulationState, CrossroadSimulationEvent.SemaphoreChange> {
+class SemaphoreChangeGenerator :
+    SimulationEventCreator<CrossroadSimulationState, CrossroadSimulationEvent.SemaphoreChange> {
 
-    override fun nextEvent(simulationState: CrossroadSimulationState): CrossroadSimulationEvent.SemaphoreChange {
+    override fun nextEvent(
+        simulationState: CrossroadSimulationState,
+        simulationEndTime: Int,
+    ): CrossroadSimulationEvent.SemaphoreChange {
         TODO("Not yet implemented")
     }
 
-    override fun nextEventAt(simulationState: CrossroadSimulationState): Int? {
+    override fun nextEventAt(simulationState: CrossroadSimulationState, simulationEndTime: Int): Int? {
         TODO("Not yet implemented")
     }
 

@@ -1,16 +1,20 @@
 package generators
 
-import base.SimulationEventGenerator
+import base.SimulationEventCreator
 import data.CrossroadSimulationState
 import simulation.CrossroadSimulationEvent
 
-class CarArriveGenerator : SimulationEventGenerator<CrossroadSimulationState, CrossroadSimulationEvent.CarArriveOnSemaphore> {
+class CarArriveGenerator :
+    SimulationEventCreator<CrossroadSimulationState, CrossroadSimulationEvent.CarArriveOnSemaphore> {
 
-    override fun nextEvent(simulationState: CrossroadSimulationState): CrossroadSimulationEvent.CarArriveOnSemaphore {
+    override fun nextEvent(
+        simulationState: CrossroadSimulationState,
+        simulationEndTime: Int,
+    ): CrossroadSimulationEvent.CarArriveOnSemaphore {
         TODO("Not yet implemented")
     }
 
-    override fun nextEventAt(simulationState: CrossroadSimulationState): Int? {
+    override fun nextEventAt(simulationState: CrossroadSimulationState, simulationEndTime: Int): Int? {
         TODO("Not yet implemented")
     }
 

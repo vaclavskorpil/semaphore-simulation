@@ -3,12 +3,7 @@ package simulation
 import CrossroadSimulationEventCreator
 import base.Simulation
 import data.CrossroadSimulationState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import data.SimulationResult
 import simulation.CrossroadSimulationEvent.CarArriveOnSemaphore
 import simulation.CrossroadSimulationEvent.CarLeavesCrossRoad
 import simulation.CrossroadSimulationEvent.CarStartLeavingCrossroad
@@ -16,37 +11,34 @@ import simulation.CrossroadSimulationEvent.SemaphoreChange
 import simulation.CrossroadSimulationEvent.SimulationEnd
 
 /**
- * Crossroad simulation, state machine that creates new stated based on incoming events from [eventGenerator] until SimulationEvent [SimulationEnd] is received.
- * Simulation state is exposed trough StateFlow fol clients to observe.
+ * Crossroad simulation, state machine that creates new stated based on incoming events from [eventCreator] until SimulationEvent [SimulationEnd] is received.
  *
- *  @param simulationEnd time when simulation should end
  *  @param eventCreator creator that generates events for simulation
- *  @param initialState initial simulation state
  * */
 class CrossroadSimulation(
-    override val simulationEnd: Int,
     private val eventCreator: CrossroadSimulationEventCreator,
-    initialState: CrossroadSimulationState,
-) : Simulation {
-
-    private val scope: CoroutineScope = CoroutineScope(Job())
-
-    private val _simulationState = MutableStateFlow(initialState)
-    override val simulationState: StateFlow<CrossroadSimulationState> = _simulationState
+) : Simulation<CrossroadSimulationState, CrossroadSimulationEvent> {
 
     /**
      * Starts simulation.
      * collects simulation states that create new events which maps to new states until [SimulationEnd] event is received.
      * */
-    override fun startSimulation() {
-        scope.launch {
-            simulationState.collect { currentState ->
-                val event = eventCreator.nextEvent(currentState)
-                val newState = mapEventToState(event, currentState)
-                _simulationState.emit(newState)
-                if (event is SimulationEnd) cancel()
-            }
-        }
+    override fun startSimulation(
+        initialState: CrossroadSimulationState,
+        simulationEnd: Int,
+    ): SimulationResult<CrossroadSimulationState, CrossroadSimulationEvent> {
+        var currentState = initialState
+        val simulationStateTimeline = mutableListOf(currentState)
+        val simulationEventTimeline = mutableListOf<CrossroadSimulationEvent>()
+
+        do {
+            val currentEvent = eventCreator.nextEvent(currentState, simulationEnd)
+            currentState = mapEventToState(currentEvent, currentState)
+            simulationStateTimeline.add(currentState)
+            simulationEventTimeline.add(currentEvent)
+        } while (currentEvent !is SimulationEnd)
+
+        return SimulationResult(simulationEventTimeline, simulationStateTimeline)
     }
 
     /**
